@@ -26,23 +26,71 @@ function run(text) {
 
 function doVis(data) {
   
-  const container = d3.select('#root')
-  const dim = container.node().getBoundingClientRect()
+  const root = d3.select('#root')
+  const dim = root.node().getBoundingClientRect()
 
-  const svg = container.append('svg')
+  const svg = root.append('svg')
     .attr('width', dim.width)
     .attr('height', dim.height)
 
-  const barWidth = dim.width / data.length;
+  const sidePadding = 25;
+  const bottomPadding = 45;
+  const width = dim.width - (sidePadding * 2);
+  //const width = dim.width;
+  const height = dim.height;
 
-  const bases = svg.selectAll('.bar')
+  // add 5' and 3' text
+  svg
+    .append('text')
+      .text("5'")
+      .attr('x', 5)
+      .attr('y', dim.height)
+      .attr('font-size', 22)
+      .attr('font-weight', 'bold')
+      .attr('font-family', 'arial')
+
+  svg
+    .append('text')
+      .text("3'")
+      .attr('x', dim.width - 25)
+      .attr('y', dim.height)
+      .attr('font-size', 22)
+      .attr('font-weight', 'bold')
+      .attr('font-family', 'arial')
+
+  const container = svg
+    .append('g')
+      .attr('class', 'container')
+      .attr('transform', svgTranslateString(sidePadding, 0))
+
+  const barWidth = width / data.length;
+  const barHeight = height - bottomPadding;
+
+  const columns = container.selectAll('.column')
     .data(data)
     .enter()
     .append('g')
-      .attr('class', 'bar')
+      .attr('class', 'column')
       .attr('transform', (d, i) => {
         return svgTranslateString(i * barWidth, 0)
       })
+
+  // add locus number text element
+  const locusOffset = 25;
+  columns
+    .append('g')
+    .attr('transform',
+      svgTranslateString(barWidth / 2, height - locusOffset) +
+        ' rotate(-90)')
+    .append('text')
+    .text((d, i) => i + 1)
+    .attr('text-anchor', 'middle')
+    .attr('font-size', 22)
+    .attr('font-weight', 'bold')
+    .attr('font-family', 'arial')
+    .attr('y', 8)
+
+  const bases = columns
     .selectAll('.base')
     .data((d) => d)
     .enter()
@@ -50,11 +98,13 @@ function doVis(data) {
       .attr('class', 'base')
       .attr('transform', (d) => {
         const offset =
-          dim.height - (d.offset * dim.height);
+          barHeight - (d.offset * barHeight);
         return svgTranslateString(0, offset);
       })
 
-  bases.call(createLetters, barWidth, dim);
+  const baseDim = { width, height: barHeight };
+
+  bases.call(createLetters, barWidth, baseDim);
 }
 
 function createLetters(selection, barWidth, dim) {
@@ -81,13 +131,16 @@ function createLetters(selection, barWidth, dim) {
 }
 
 function appendLetter(selection, path, barWidth, dim) {
+
+  const height = dim.height;
+
   selection
     .append('svg')
       .attr('viewBox', "0 0 100 100")
       .attr('width', (d) => barWidth)
-      .attr('height', (d) => d.ratio * dim.height)
+      .attr('height', (d) => d.ratio * height)
       .attr('preserveAspectRatio', 'none')
-      .attr('y', (d) => -(d.ratio * dim.height))
+      .attr('y', (d) => -(d.ratio * height))
     .append('path')
       .attr('d', path)
       .attr('fill', 'transparent')
