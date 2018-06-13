@@ -50,7 +50,9 @@ function doVis(data) {
     .append('g')
       .attr('class', 'base')
       .attr('transform', (d) => {
-        return svgTranslateString(0, d.offset * dim.height)
+        const offset =
+          dim.height - (d.offset * dim.height);
+        return svgTranslateString(0, offset);
       })
 
   bases.call(createLetters, barWidth, dim);
@@ -86,6 +88,7 @@ function appendLetter(selection, path, barWidth, dim) {
       .attr('width', (d) => barWidth)
       .attr('height', (d) => d.ratio * dim.height)
       .attr('preserveAspectRatio', 'none')
+      .attr('y', (d) => -(d.ratio * dim.height))
     .append('path')
       .attr('d', path)
       .attr('fill', 'transparent')
