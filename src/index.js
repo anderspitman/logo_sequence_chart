@@ -97,17 +97,18 @@ function appendLetter(selection, path, barWidth, dim) {
 
 function appendA(selection, barWidth, dim) {
   appendLetter(selection,
-    'M0 100 L50 0 L100 100 M25 50 L 75 50', barWidth, dim);
+    'M10 110 L50 -5 L90 110 M25 75 L 75 75', barWidth, dim);
 }
 
 function appendC(selection, barWidth, dim) {
-  appendLetter(selection, 'M100 0 L0 0 L0 100 L 100 100',
+  appendLetter(selection,
+    'M100 10 L10 10 L10 90 L100 90',
     barWidth, dim);
 }
 
 function appendG(selection, barWidth, dim) {
   appendLetter(selection,
-    'M100 0 L0 0 L0 100 L100 100 L100 60 L60 60',
+    'M100 10 L10 10 L10 90 L90 90 L90 60 L60 60',
     barWidth, dim);
 }
 
