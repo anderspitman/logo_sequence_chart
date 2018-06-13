@@ -1,12 +1,11 @@
 import * as d3 from 'd3';
 import { FastaParser } from './fasta_parser.js';
 
-const colors = d3.schemeCategory10;
 const colorMap = {
-  'A': colors[0],
-  'C': colors[1],
-  'G': colors[2],
-  'T': colors[3],
+  'A': '#1fca23',
+  'C': '#061ac8',
+  'G': '#feb22b',
+  'T': '#c90813',
 };
 
 //d3.text('data.fasta').then((text) => {
